@@ -8,7 +8,7 @@ load_dotenv()
 CLIENT_ID = os.getenv("HMRC_CLIENT_ID")
 CLIENT_SECRET = os.getenv("HMRC_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("HMRC_REDIRECT_URI")
-CODE="42362681d6db40df8793feed551250b5"
+CODE="da9c63054eb443539dfa8bd3524f0cd2"
   # your OAuth code
 BASE_URL = os.getenv("HMRC_BASE_URL")
 

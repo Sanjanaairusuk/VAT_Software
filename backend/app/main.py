@@ -5,7 +5,7 @@ from app.hmrc.helpers import build_authorization_url
 
 CLIENT_ID = "juUaMRwkOygCYfP6zQgHVCxBVG9b"
 CLIENT_SECRET = "95d59476-5e79-492b-9f9e-6a054f0964b2"
-REDIRECT_URI = "http://localhost:8000/auth/callback"
+REDIRECT_URI = "https://ideal-funicular-4jp9w596p7qpc7rv4-8000.app.github.dev/auth/callback"
 VRN = "981598758"
 
 # Create database tables
