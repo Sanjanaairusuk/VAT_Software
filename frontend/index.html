@@ -1,13 +1,35 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAT Software</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>VAT Software</h1>
+    <p>VAT Return Management System</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Check VAT Details</h2>
+
+      <label for="vatNumber">VAT Number</label><br />
+      <input type="text" id="vatNumber" placeholder="Enter VAT Number" />
+
+      <br /><br />
+      <button id="checkBtn">Check</button>
+    </section>
+
+    <section class="card">
+      <h3>Response</h3>
+      <pre id="output">Waiting for input...</pre>
+    </section>
+  </main>
+
+  <script src="/src/main.js"></script>
+</body>
 </html>
