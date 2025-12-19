@@ -1,11 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from app.database.db import Base, engine
 from app.hmrc.oauth import get_hmrc_token, get_vat_obligations
 from app.hmrc.helpers import build_authorization_url
 
 CLIENT_ID = "juUaMRwkOygCYfP6zQgHVCxBVG9b"
 CLIENT_SECRET = "95d59476-5e79-492b-9f9e-6a054f0964b2"
-REDIRECT_URI = "https://ideal-funicular-4jp9w596p7qpc7rv4-8000.app.github.dev/auth/callback"
+REDIRECT_URI = "https://cuddly-zebra-x5gqv7qxgwj5f6p5-8000.app.github.dev/auth/callback"
 VRN = "981598758"
 
 # Create database tables
@@ -21,21 +21,38 @@ def root():
 # Generate HMRC login URL
 @app.get("/hmrc/login")
 def hmrc_login():
+    """
+    Redirect the user to HMRC OAuth login page
+    """
     auth_url = build_authorization_url(CLIENT_ID, REDIRECT_URI)
     return {"auth_url": auth_url}
 
 # Callback endpoint to exchange code for tokens
 @app.get("/auth/callback")
-def hmrc_callback(code: str):
+def hmrc_callback(request: Request):
+    """
+    HMRC OAuth callback
+    Receives 'code' from HMRC after login and exchanges it for access token
+    """
+    code = request.query_params.get("code")
+    if not code:
+        raise HTTPException(status_code=400, detail="Missing 'code' parameter from HMRC")
+
     try:
         token_data = get_hmrc_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI)
-        return {"message": "Token saved successfully", "token_data": token_data}
+        return {
+            "message": "HMRC OAuth successful! Token saved.",
+            "token_data": token_data
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 # Fetch VAT obligations
 @app.get("/vat/obligations")
 def vat_obligations():
+    """
+    Fetch VAT obligations using the saved token for VRN
+    """
     try:
         obligations = get_vat_obligations(CLIENT_ID, CLIENT_SECRET, VRN)
         return obligations
