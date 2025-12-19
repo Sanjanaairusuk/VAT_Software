@@ -1,60 +1,88 @@
-from fastapi import FastAPI, HTTPException, Request
-from app.database.db import Base, engine
-from app.hmrc.oauth import get_hmrc_token, get_vat_obligations
-from app.hmrc.helpers import build_authorization_url
+from fastapi import FastAPI, HTTPException
+import os
+import requests
+from dotenv import load_dotenv
+from datetime import date
 
-CLIENT_ID = "juUaMRwkOygCYfP6zQgHVCxBVG9b"
-CLIENT_SECRET = "95d59476-5e79-492b-9f9e-6a054f0964b2"
-REDIRECT_URI = "https://cuddly-zebra-x5gqv7qxgwj5f6p5-8000.app.github.dev/auth/callback"
-VRN = "981598758"
-
-# Create database tables
-Base.metadata.create_all(bind=engine)
+load_dotenv()
 
 app = FastAPI()
 
-# Root endpoint
+HMRC_CLIENT_ID = os.getenv("HMRC_CLIENT_ID")
+HMRC_CLIENT_SECRET = os.getenv("HMRC_CLIENT_SECRET")
+HMRC_REDIRECT_URI = os.getenv("HMRC_REDIRECT_URI")
+HMRC_BASE_URL = os.getenv("HMRC_BASE_URL")
+
+ACCESS_TOKEN = None
+
+
 @app.get("/")
 def root():
     return {"message": "VAT Software Running"}
 
-# Generate HMRC login URL
+
 @app.get("/hmrc/login")
 def hmrc_login():
-    """
-    Redirect the user to HMRC OAuth login page
-    """
-    auth_url = build_authorization_url(CLIENT_ID, REDIRECT_URI)
+    auth_url = (
+        f"{HMRC_BASE_URL}/oauth/authorize"
+        f"?response_type=code"
+        f"&client_id={HMRC_CLIENT_ID}"
+        f"&scope=read:vat write:vat"
+        f"&redirect_uri={HMRC_REDIRECT_URI}"
+    )
     return {"auth_url": auth_url}
 
-# Callback endpoint to exchange code for tokens
+
 @app.get("/auth/callback")
-def hmrc_callback(request: Request):
-    """
-    HMRC OAuth callback
-    Receives 'code' from HMRC after login and exchanges it for access token
-    """
-    code = request.query_params.get("code")
-    if not code:
-        raise HTTPException(status_code=400, detail="Missing 'code' parameter from HMRC")
+def auth_callback(code: str):
+    global ACCESS_TOKEN
 
-    try:
-        token_data = get_hmrc_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI)
-        return {
-            "message": "HMRC OAuth successful! Token saved.",
-            "token_data": token_data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    token_url = f"{HMRC_BASE_URL}/oauth/token"
 
-# Fetch VAT obligations
+    payload = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": HMRC_REDIRECT_URI,
+        "client_id": HMRC_CLIENT_ID,
+        "client_secret": HMRC_CLIENT_SECRET,
+    }
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    response = requests.post(token_url, data=payload, headers=headers)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=400, detail=response.text)
+
+    ACCESS_TOKEN = response.json()["access_token"]
+    return {"message": "HMRC authorization successful"}
+
 @app.get("/vat/obligations")
-def vat_obligations():
-    """
-    Fetch VAT obligations using the saved token for VRN
-    """
-    try:
-        obligations = get_vat_obligations(CLIENT_ID, CLIENT_SECRET, VRN)
-        return obligations
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+def get_vat_obligations(
+    vrn: str,
+    from_date: str = "2023-01-01",
+    to_date: str = "2025-12-31"
+):
+    if not ACCESS_TOKEN:
+        raise HTTPException(status_code=401, detail="Not authorized with HMRC")
+
+    url = f"{HMRC_BASE_URL}/organisations/vat/{vrn}/obligations"
+
+    params = {
+        "from": from_date,
+        "to": to_date
+    }
+
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Accept": "application/vnd.hmrc.1.0+json"
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+
+    return response.json()
