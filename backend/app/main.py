@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
 import os
 import requests
@@ -7,6 +8,14 @@ from datetime import date
 load_dotenv()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # for development only
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 HMRC_CLIENT_ID = os.getenv("HMRC_CLIENT_ID")
 HMRC_CLIENT_SECRET = os.getenv("HMRC_CLIENT_SECRET")
