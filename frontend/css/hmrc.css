@@ -1,0 +1,21 @@
+.hmrc-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f5f9;
+}
+
+.hmrc-card {
+  background: white;
+  width: 700px;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.hmrc-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}

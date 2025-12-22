@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HMRC Authentication</title>
+  <link rel="stylesheet" href="css/hmrc.css" />
+</head>
+<body class="hmrc-page">
+
+  <div class="hmrc-card">
+    <div class="hmrc-header">
+      <span class="icon">🔒</span>
+      <h1>HMRC Authentication</h1>
+    </div>
+
+    <p>
+      Authenticating with HMRC will allow you to submit your VAT returns
+      and view your VAT records.
+    </p>
+
+    <p>
+      You'll need to use your <strong>Government Gateway ID</strong> and
+      password to authorise <strong>My Tax Digital</strong>
+      to interact with HMRC on your behalf.
+    </p>
+
+    <div class="actions">
+      <button class="cancel" onclick="goBack()">Cancel</button>
+      <button class="continue" onclick="redirectToHMRC()">Continue to HMRC</button>
+    </div>
+  </div>
+
+  <script>
+function redirectToHMRC() {
+  const url =
+    "https://test-api.service.hmrc.gov.uk/oauth/authorize" +
+    "?response_type=code" +
+    "&client_id=juUaMRwkOygCYfP6zQgHVCxBVG9b" +
+    "&redirect_uri=https://fuzzy-chainsaw-pj5qwp67x7q4369g7-8000.app.github.dev/auth/callback" +
+    "&scope=read:vat write:vat" +
+    "&state=randomString123";
+ 
+  window.location.href = url;
+}
+</script>
+  <!-- Optional: external JS -->
+  <script src="hmrc.js"></script>
+
+</body>
+</html>
