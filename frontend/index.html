@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAT Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="vat-container">
+
+  <div class="vat-grid">
+
+    <div class="vat-card">
+      <div class="icon">📄</div>
+      <h3>Submit Return</h3>
+      <p>Submit a new VAT return to HMRC</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">🧾</div>
+      <h3>VAT Return Receipts</h3>
+      <p>View your submitted VAT return receipts</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">📅</div>
+      <h3>Obligations</h3>
+      <p>View your upcoming and fulfilled VAT obligations</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">💳</div>
+      <h3>Liabilities</h3>
+      <p>View your outstanding VAT liabilities</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">£</div>
+      <h3>Payments</h3>
+      <p>View your history of VAT payments</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">✉️</div>
+      <h3>Reminders</h3>
+      <p>View and manage your VAT reminders</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card">
+      <div class="icon">⚖️</div>
+      <h3>Penalties</h3>
+      <p>View any VAT penalties you have received</p>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="vat-card" onclick="goToAuth()">
+  <div class="icon">➡️</div>
+  <h3>HMRC Authorisation</h3>
+  <p>Grant permissions to interact with HMRC MTD</p>
+  <span class="arrow">↗</span>
+</div>
+
+<script>
+  function goToAuth() {
+    window.location.href = "hmrc-auth.html";
+  }
+</script>
+
+
+  </div>
+</div>
+
+</body>
+</html>
