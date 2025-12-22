@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAT Software</title>
+  <style>
+    /* Reset & Basic */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f5f7fa; }
+
+    /* Navbar */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #1a3f9c; color: #fff; }
+    .navbar h1 { font-size: 1.5rem; }
+    .navbar span { font-size: 0.9rem; color: #e0e0e0; margin-left: 0.5rem; }
+    .navbar a { color: #fff; text-decoration: none; margin-left: 1rem; padding: 0.4rem 1rem; border-radius: 5px; }
+    .btn-outline { border: 1px solid #fff; }
+
+    /* Hero Section */
+    .hero { text-align: center; padding: 4rem 2rem; background: linear-gradient(to right, #1a3f9c, #3567c3); color: #fff; }
+    .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .hero p { margin-bottom: 2rem; }
+
+    .hero .auth-buttons a { display: inline-block; margin: 0 0.5rem; background: #fff; color: #1a3f9c; padding: 0.6rem 1.2rem; border-radius: 5px; font-weight: bold; }
+
+    /* Auth Section */
+    .auth-section { display: flex; justify-content: center; padding: 4rem 2rem; background: #f5f7fa; }
+    .auth-card { background: #fff; padding: 2rem; border-radius: 10px; width: 100%; max-width: 400px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+
+    .auth-card h2 { text-align: center; margin-bottom: 1.5rem; }
+    .auth-card label { display: block; margin-top: 1rem; margin-bottom: 0.5rem; font-weight: bold; }
+    .auth-card input[type="text"], 
+    .auth-card input[type="email"], 
+    .auth-card input[type="password"] { width: 100%; padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc; }
+    
+    .auth-card .checkbox { margin-top: 1rem; }
+    .auth-card .checkbox input { margin-right: 0.5rem; }
+
+    .auth-card .form-footer { margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .auth-card .form-footer a { font-size: 0.9rem; color: #1a3f9c; text-decoration: none; }
+    .auth-card .form-footer button { background: #1a3f9c; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; cursor: pointer; }
+
+    .hidden { display: none; }
+
+    @media(max-width: 500px) {
+      .navbar { flex-direction: column; text-align: center; }
+      .navbar .nav-right { margin-top: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <h1>VAT Software</h1>
+      <span>VAT Return Management System</span>
+    </div>
+    <div class="nav-right">
+      <a href="#auth" id="navSignIn">Sign in</a>
+      <a href="#auth" id="navRegister" class="btn-outline">Register</a>
+    </div>
+  </header>
+
+  <!-- Hero / Index Section -->
+  <section class="hero">
+    <h1>Welcome to VAT Software</h1>
+    <p>Manage your VAT Returns efficiently and securely.</p>
+    <div class="auth-buttons">
+      <a href="#auth" id="heroSignIn">Sign in</a>
+      <a href="#auth" id="heroRegister">Register</a>
+    </div>
+  </section>
+
+  <!-- Auth Section -->
+  <section class="auth-section" id="auth">
+    <div class="auth-card">
+      <h2 id="formTitle">Sign in</h2>
+
+      <!-- Sign In Form -->
+      <form id="loginForm">
+        <label for="loginEmail">Email *</label>
+        <input type="email" id="loginEmail" name="email" required placeholder="Enter email">
+
+        <label for="loginPassword">Password *</label>
+        <input type="password" id="loginPassword" name="password" required placeholder="Enter password">
+
+        <div class="form-footer">
+          <div>
+            <a href="#" id="goRegister">Create an account</a><br>
+            <a href="#">Forgotten your password?</a>
+          </div>
+          <button type="submit">Sign in</button>
+        </div>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="hidden">
+        <label for="regName">Name *</label>
+        <input type="text" id="regName" name="name" required>
+
+        <label for="regEmail">Email *</label>
+        <input type="email" id="regEmail" name="email" required>
+
+        <label for="regPhone">Phone *</label>
+        <input type="text" id="regPhone" name="phone" required>
+
+        <label for="regPassword">Password *</label>
+        <input type="password" id="regPassword" name="password" required>
+
+        <label for="regConfirmPassword">Confirm Password *</label>
+        <input type="password" id="regConfirmPassword" name="confirmPassword" required>
+
+        <label class="checkbox">
+          <input type="checkbox" id="termsCheck" required>
+          I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+        </label>
+
+        <div class="form-footer">
+          <a href="#" id="goLogin">Sign in instead</a>
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    // Forms & toggles
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const formTitle = document.getElementById("formTitle");
+
+    function showForm(tab) {
+      if (tab === "register") {
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+        formTitle.textContent = "Register";
+      } else {
+        loginForm.classList.remove("hidden");
+        registerForm.classList.add("hidden");
+        formTitle.textContent = "Sign in";
+      }
+    }
+
+    // Navbar / hero links
+    document.getElementById("navSignIn").addEventListener("click", (e) => { e.preventDefault(); showForm("login"); });
+    document.getElementById("navRegister").addEventListener("click", (e) => { e.preventDefault(); showForm("register"); });
+    document.getElementById("heroSignIn").addEventListener("click", (e) => { e.preventDefault(); showForm("login"); });
+    document.getElementById("heroRegister").addEventListener("click", (e) => { e.preventDefault(); showForm("register"); });
+
+    // Links inside forms
+    document.getElementById("goRegister").addEventListener("click", (e) => { e.preventDefault(); showForm("register"); });
+    document.getElementById("goLogin").addEventListener("click", (e) => { e.preventDefault(); showForm("login"); });
+  </script>
+
+</body>
+</html>
